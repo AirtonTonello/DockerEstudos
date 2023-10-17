@@ -1,0 +1,45 @@
+# https://www.alura.com.br/artigos/desvendando-o-dockerfile
+
+# comando 'docker build' vai criar a imagem conforme o DOCKERFILE
+# comando 'docker run-it <image-id>' vai executar a imagem de maneira interativa com o terminal
+# comando 'docker run <image-id>' somente executa a imagem, sem interagir com o terminal da imagem
+
+# docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+# comando FROM é obrigatorio, ele vai se basear em algum sistema
+# FROM scratch significa que a imagem sera criada do zero, vazia, sem se basear em nada
+FROM ubuntu:18.04
+
+# comando RUN vai executar alguma coisa na imagem
+# igual comando de terminal
+# RUN apt-get install openjdk-8-jdk -y ou RUN ["apt-get", "install" "openjdk-8-jdk" ,"-y"]
+RUN apt-get update
+RUN apt-get install openjdk-8-jdk -y
+
+# comando CMD executa apenas uma vez na criação do container
+# este comando pode ser substituido na hora de executar o comando de run do docker
+CMD touch arquivo-de-boas-vindas
+
+# comando ENTRYPOINT igual CMD porém ele não pode ser substituido
+# serve como uma opção estatica
+ENTRYPOINT touch outro-arquivo
+
+# comando define qual a pasta padrão que o docker ira executar
+# a partir desta pasta, os comandos COPY ADD e demais sera executado
+WORKDIR /pasta-padrao
+
+# comando ADD permite fazer a copia de arquivos e pastas para dentro do container
+# comando ADD permite fazer download de URLs
+ADD arquivo-host arquivo-host-transferido
+
+# comando COPY somente faz a cópia, ele não permite fazer o download de nada
+COPY arquivo-host arquivo-host-transferido
+
+# comando EXPOSE define para o container qual porta sera liberada para uso
+# este comando não define a porta, somente documenta
+EXPOSE 8080
+
+# comando VOLUME cria uma pasta que sera compartilhada entre o host e o container
+# esta pasta pode ser acessada atraves do caminho '/var/lib/docker/volumes'
+VOLUME /compartilhada-com-host
+
